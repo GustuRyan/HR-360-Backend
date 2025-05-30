@@ -2,8 +2,6 @@ package org.acme.repository.schedule;
 
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
-import java.util.Set;
-
 public record ScheduleEnt(
     @ColumnName(EMP_SCHEDULE_ID) Long empSchId,
     @ColumnName(EMPLOYEE_ID) Long employeeId,
