@@ -6,8 +6,10 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.acme.controller.auth.LoginController;
+import org.acme.dto.employee.EmployeeDTO;
 import org.acme.repository.employee.EmployeeEnt;
 import org.acme.repository.employee.EmployeeRepository;
+import org.acme.service.employee.EmployeeService;
 
 import java.util.Map;
 
@@ -20,6 +22,9 @@ public class EmployeeController {
 
     @Inject
     LoginController loginController;
+
+    @Inject
+    EmployeeService employeeService;
 
     @GET
     @Path("/retrieve-detail")
@@ -39,6 +44,14 @@ public class EmployeeController {
     @Produces(MediaType.APPLICATION_JSON)
     public String updateEmployee(@Valid EmployeeEnt employee) {
         return employeeRepository.updateEmployee(loginController.userProfile().employeeId(), employee);
+    }
+
+    @PUT
+    @Path("/update-dto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public String updateEmployeeDTO(@Valid EmployeeDTO employee) {
+        return employeeService.updateEmployee(loginController.userProfile().employeeId(), employee);
     }
 
 }
