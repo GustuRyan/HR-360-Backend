@@ -94,4 +94,34 @@ public class EmployeeRepository {
             return "Gagal update";
         }
     }
+
+    public String updateEmployeeDTO(EmployeeEnt employee) {
+        List<String> fieldList = Arrays.asList(FIELDS.split(","));
+
+        var query = generateEmployeeUpdate(fieldList);
+
+        int rowsAffected = jdbi.withHandle(handle -> handle.createUpdate(query)
+                .bind("employeeId", employee.employeeId())
+                .bind("FULL_NAME", employee.fullName())
+                .bind("ADDRESS", employee.address())
+                .bind("EMAIL", employee.email())
+                .bind("phone", employee.phone())
+                .bind("SEX", employee.gender())
+                .bind("BIRTH_DATE", employee.birthDate())
+                .bind("BIRTH_PLACE", employee.birthPlace())
+                .bind("BLOOD_TYPE", employee.bloodType())
+                .bind("MARITAL_ID", employee.maritalStatus())
+                .bind("NATIONALITY_ID", employee.nationalityId())
+                .bind("EMERGENCY_NAME", employee.nameEmg())
+                .bind("PHONE_EMG", employee.phoneEmg())
+                .bind("ADDRESS_EMG", employee.addressEmg())
+                .execute()
+        );
+
+        if (rowsAffected > 0) {
+            return String.format("Update berhasil %s", employee);
+        } else {
+            return "Gagal update";
+        }
+    }
 }
