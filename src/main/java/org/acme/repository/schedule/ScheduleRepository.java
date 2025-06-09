@@ -3,6 +3,7 @@ package org.acme.repository.schedule;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import org.jdbi.v3.core.Jdbi;
 
 import java.sql.Timestamp;
@@ -38,7 +39,9 @@ public class ScheduleRepository {
                         .bind("period", "April 2025")
                         .mapTo(Long.class)
                         .findOne()
-                        .orElseThrow(() -> new WebApplicationException("Period not found", 404))
+                        .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                                .entity(Map.of("error", "current period not found"))
+                                .build()))
         );
     }
 
@@ -52,7 +55,9 @@ public class ScheduleRepository {
                 .bind("periodId", thisPeriod)
                 .mapTo(Long.class)
                 .findOne()
-                .orElseThrow(() -> new WebApplicationException("Schedule not found", 404))
+                .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", "current period schedule not found"))
+                        .build()))
         );
     }
 
@@ -63,7 +68,9 @@ public class ScheduleRepository {
                 .bind("empSchId", empSchId)
                 .mapToMap()
                 .findOne()
-                .orElseThrow(() -> new WebApplicationException("Schedule Symbol not found", 404))
+                .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", "today schedule not found"))
+                        .build()))
         );
     }
 
@@ -108,7 +115,9 @@ public class ScheduleRepository {
                 .bind("empSchId", empSchId)
                 .mapToMap()
                 .findOne()
-                .orElseThrow(() -> new WebApplicationException("Schedule Symbol not found", 404))
+                .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", "today schedule not found"))
+                        .build()))
         );
     }
 
