@@ -40,7 +40,7 @@ public class LoginController {
         }
 
         Set<String> roles = new HashSet<>();
-        if (user.userStatus() == 1) {
+        if (user.userStatus() != null && user.userStatus() == 1) {
             roles.add("user");
         }
         if (user.adminStatus() == 1) {
