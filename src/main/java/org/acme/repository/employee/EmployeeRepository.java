@@ -3,6 +3,7 @@ package org.acme.repository.employee;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 
@@ -41,7 +42,9 @@ public class EmployeeRepository {
                 .bind("employeeId", employeeId)
                 .mapToMap()
                 .findOne()
-                .orElseThrow(() -> new WebApplicationException("Employee detail not found", 404))
+                .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", "employee detail not found"))
+                        .build()))
         );
     }
 
@@ -52,8 +55,9 @@ public class EmployeeRepository {
                 .registerRowMapper(ConstructorMapper.factory(EmployeeEnt.class))
                 .mapTo(EmployeeEnt.class)
                 .findOne()
-                .orElseThrow(() -> new WebApplicationException("Employee not found", 404)
-                )
+                .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", "employee detail not found"))
+                        .build()))
         );
     }
 
