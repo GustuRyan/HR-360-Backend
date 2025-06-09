@@ -3,6 +3,7 @@ package org.acme.repository.auth;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.sql.Timestamp;
