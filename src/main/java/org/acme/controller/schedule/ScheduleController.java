@@ -2,11 +2,11 @@ package org.acme.controller.schedule;
 
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import org.acme.controller.auth.LoginController;
 import org.acme.repository.schedule.ScheduleRepository;
+
 import java.util.List;
 import java.util.Map;
 
@@ -30,22 +30,34 @@ public class ScheduleController {
         return scheduleRepository.todaySchedule(currentPeriodSchedule());
     }
 
-    @PUT
+    @POST
     @Path("/clock-in")
     public String clockIn() {
         return scheduleRepository.clockIn(currentPeriodSchedule());
     }
 
-    @PUT
+    @POST
     @Path("/clock-out")
     public String clockOut() {
         return scheduleRepository.clockOut(currentPeriodSchedule());
     }
 
     @GET
-    @Path("/week-schedule-list")
-    public List<Object> weekScheduleList() {
-        return scheduleRepository.weekScheduleList(currentPeriodSchedule());
+    @Path("/week-list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, Object> weekList(@QueryParam("month") int month,
+                        @QueryParam("year") int year)
+    {
+        return scheduleRepository.getWeekCountInMonth(month, year);
     }
 
+    @GET
+    @Path("/weekly")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Object> weeklySchedule(@QueryParam("week") int week,
+                                       @QueryParam("month") int month,
+                                       @QueryParam("year") int year
+    ) {
+        return scheduleRepository.weekScheduleList(loginController.userProfile().employeeId(), week, month, year);
+    }
 }
