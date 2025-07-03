@@ -32,18 +32,19 @@ public class ScheduleController {
 
     @POST
     @Path("/clock-in")
-    public String clockIn() {
+    public Map<String, String> clockIn() {
         return scheduleRepository.clockIn(currentPeriodSchedule());
     }
 
     @POST
+
     @Path("/clock-out")
-    public String clockOut() {
+    public Map<String, String> clockOut() {
         return scheduleRepository.clockOut(currentPeriodSchedule());
     }
 
     @GET
-    @Path("/week-list")
+    @Path("/week-count")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, Object> weekList(@QueryParam("month") int month,
                         @QueryParam("year") int year)

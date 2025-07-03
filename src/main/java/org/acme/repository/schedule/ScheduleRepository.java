@@ -23,7 +23,6 @@ public class ScheduleRepository {
     @Inject
     Jdbi jdbi;
 
-    private final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
     private final String todayDate = String.valueOf(LocalDate.now().getDayOfMonth());
 
     public Long currentPeriod() {
@@ -33,7 +32,7 @@ public class ScheduleRepository {
 
         return jdbi.withHandle(handle ->
                 handle.createQuery("SELECT PERIOD_ID FROM hr_period WHERE PERIOD = :period")
-                        .bind("period", "Maret 2025")
+                        .bind("period", "September 2022")
                         .mapTo(Long.class)
                         .findOne()
                         .orElseThrow(() -> new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
@@ -91,8 +90,13 @@ public class ScheduleRepository {
         );
     }
 
-    public String clockIn(Long empSchId) {
-        var query = String.format("UPDATE %s SET IN%s = :now WHERE %s = :empSchId AND IN%s IS NULL", TABLE_NAME, todayDate, EMP_SCHEDULE_ID, todayDate);
+    public Map<String, String> clockIn(Long empSchId) {
+        final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+        var query = String.format(
+                "UPDATE %s SET IN%s = :now WHERE %s = :empSchId AND IN%s IS NULL",
+                TABLE_NAME, todayDate, EMP_SCHEDULE_ID, todayDate
+        );
 
         int rowsAffected = jdbi.withHandle(handle -> handle.createUpdate(query)
                 .bind("now", now)
@@ -100,14 +104,22 @@ public class ScheduleRepository {
                 .execute()
         );
 
+        Map<String, String> response = new HashMap<>();
+
         if (rowsAffected > 0) {
-            return String.format("Clock in berhasil pada %s", now);
+            response.put("message", String.format("Clock in success in %s", now));
+            response.put("status", "Clock in successful");
         } else {
-            return "Clock in gagal: Mungkin sudah melakukan clock in sebelumnya atau ID tidak ditemukan.";
+            response.put("message", "Already clock in | or ID can't be found");
+            response.put( "status", "Clock in failed");
         }
+
+        return response;
     }
 
-    public String clockOut(Long empSchId) {
+    public Map<String, String> clockOut(Long empSchId) {
+        final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
         var query = String.format("UPDATE %s SET OUT%s = :now WHERE %s = :empSchId AND OUT%s IS NULL", TABLE_NAME, todayDate, EMP_SCHEDULE_ID, todayDate);
 
         int rowsAffected = jdbi.withHandle(handle ->
@@ -117,13 +129,17 @@ public class ScheduleRepository {
                         .execute()
         );
 
+        Map<String, String> response = new HashMap<>();
+
         if (rowsAffected > 0) {
-            return String.format("Clock out berhasil pada %s", now);
+            response.put("message", String.format("Clock out success in %s", now));
+            response.put("status", "Clock out successful");
         } else {
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("error", "clock out failed"))
-                    .build());
+            response.put("message", "Already clock out | or ID can't be found");
+            response.put( "status", "Clock out failed");
         }
+
+        return response;
     }
 
     public Map<String, Object> getWeekCountInMonth(int month, int year) {

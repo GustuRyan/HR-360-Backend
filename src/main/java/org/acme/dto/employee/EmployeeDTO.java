@@ -12,7 +12,7 @@ public class EmployeeDTO {
     public String birthPlace;
     public String bloodType;
     public Long maritalStatus;
-    public Long nationalityId;
+    public Long nationalityName;
     public String nameEmg;
     public String phoneEmg;
     public String addressEmg;

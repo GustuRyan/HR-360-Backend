@@ -9,7 +9,7 @@ import org.acme.controller.auth.LoginController;
 import org.acme.dto.employee.EmployeeDTO;
 import org.acme.repository.employee.EmployeeEnt;
 import org.acme.repository.employee.EmployeeRepository;
-import org.acme.service.employee.EmployeeService;
+//import org.acme.service.employee.EmployeeService;
 
 import java.util.Map;
 
@@ -24,13 +24,7 @@ public class EmployeeController {
     LoginController loginController;
 
     @Inject
-    EmployeeService employeeService;
-
-    @GET
-    @Path("/retrieve-detail")
-    public Map<String, Object> retrieveEmployee() {
-        return employeeRepository.retrieveEmployeeDetail(loginController.userProfile().employeeId());
-    }
+//    EmployeeService employeeService;
 
     @GET
     @Path("/detail")
@@ -42,16 +36,16 @@ public class EmployeeController {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String updateEmployee(@Valid EmployeeEnt employee) {
+    public Map<String, String> updateEmployee(@Valid EmployeeEnt employee) {
         return employeeRepository.updateEmployee(loginController.userProfile().employeeId(), employee);
     }
 
-    @PUT
-    @Path("/update-dto")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String updateEmployeeDTO(@Valid EmployeeDTO employee) {
-        return employeeService.updateEmployee(loginController.userProfile().employeeId(), employee);
-    }
+//    @PUT
+//    @Path("/update-dto")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String updateEmployeeDTO(@Valid EmployeeDTO employee) {
+//        return employeeService.updateEmployee(loginController.userProfile().employeeId(), employee);
+//    }
 
 }

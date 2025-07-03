@@ -2,12 +2,15 @@ greeting:
   message: "hello"
 
 quarkus:
+  http:
+    host: 0.0.0.0
+
   datasource:
     db-kind: mysql
-    username: 
-    password: 
+    username: sysprog
+    password: S3cureP@ssw0rd!
     jdbc:
-      url: 
+      url: jdbc:mysql://103.147.159.36:3306/hairisma_bank_demo?allowMultiQueries=true
 
   mp:
     jwt:
